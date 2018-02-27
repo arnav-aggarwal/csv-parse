@@ -16,7 +16,5 @@
     "url": "https://github.com/arnav-aggarwal/csv-parse/issues"
   },
   "homepage": "https://github.com/arnav-aggarwal/csv-parse#readme",
-  "dependencies": {
-    "csv": "^2.0.0"
-  }
+  "dependencies": {}
 }
