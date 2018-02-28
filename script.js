@@ -9,7 +9,7 @@ function formatColumnTitle(title) {
 		.replace(/__/g, '_')
 		.replace(/\d|-/g, '')
 		.toLowerCase();
-	
+
 	if (title[title.length - 1] === '_') {
 		return title.slice(0, -1);
 	}
@@ -48,18 +48,18 @@ function script(data) {
 
 	for (const stateString in formattedData) {
 		const state = formattedData[stateString];
-
+		if (!state.population) {
+			delete formattedData[stateString];
+			continue;
+		}
+		
+		state.population = state.population.total;
+		state.rape = state['rape_(revised_definition)'];
+		delete state['rape_(revised_definition)'];
 		delete state.state;
 		delete state.area;
 		delete state[''];
 		delete state['rape_(legacy_definition)'];
-
-		state.rape = state['rape_(revised_definition)'];
-		delete state['rape_(revised_definition)'];
-
-		if (state.population) {
-			state.population = state.population.total;
-		}
 	}
 
 	return formattedData;
