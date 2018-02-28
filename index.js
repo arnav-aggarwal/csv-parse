@@ -10,8 +10,8 @@ data.splice(-12, 12);
 
 let columnTitles = data.splice(0, 1)[0];
 
-// Change '\n' to '_'
-columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d/g, ''));
+// Change '\n' to '_', numbers and '-' to empty string
+columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d|-/g, ''));
 
 data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
