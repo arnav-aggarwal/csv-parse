@@ -2,21 +2,26 @@ function stringToNumber(numberString) {
 	return Number(numberString.replace(/,/g, ''));
 }
 
+// Change '\n', ' ', and '__' to '_', numbers and '-' to empty string
+function formatColumnTitle(title) {
+	title = title
+		.replace(/\n|\s/g, '_')
+		.replace(/__/g, '_')
+		.replace(/\d|-/g, '')
+		.toLowerCase();
+	
+	if (title[title.length - 1] === '_') {
+		return title.slice(0, -1);
+	}
+
+	return title;
+}
+
 function script(data) {
 	// Remove unneeded rows
 	data.splice(0, 3);
-	data.splice(-12, 12);
 
-	let columnTitles = data.splice(0, 1)[0];
-
-	// Change '\n' and ' ' to '_', numbers and '-' to empty string
-	columnTitles = columnTitles.map(str =>
-		str
-			.replace(/\n|\s/g, '_')
-			.replace(/\d|-/g, '')
-			.toLowerCase()
-	);
-
+	const columnTitles = data.splice(0, 1)[0].map(formatColumnTitle);
 	data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
 	const formattedData = {};
@@ -54,7 +59,7 @@ function script(data) {
 
 		if (state.population) {
 			state.population = state.population.total;
-		}		
+		}
 	}
 
 	return formattedData;
