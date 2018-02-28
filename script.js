@@ -2,28 +2,31 @@ function stringToNumber(numberString) {
 	return Number(numberString.replace(/,/g, ''));
 }
 
-// Change '\n', ' ', and '__' to '_', numbers and '-' to empty string
 function formatColumnTitle(title) {
 	title = title
-		.replace(/\n|\s/g, '_')
-		.replace(/__/g, '_')
-		.replace(/\d|-/g, '')
+		.replace(/\n|\s/g, '_') // newlines and whitespace -> single underscore
+		.replace(/__/g, '_') // double underscores -> single underscore
+		.replace(/\d|-/g, '') // digits, dashes -> empty
 		.toLowerCase();
 
 	if (title[title.length - 1] === '_') {
-		return title.slice(0, -1);
+		return title.slice(0, -1); // take off trailing underscore
 	}
 
 	return title;
 }
 
 function script(data) {
-	// Remove unneeded rows
+	// Remove unneeded title rows
 	data.splice(0, 3);
 
+	// Format all column titles
 	const columnTitles = data.splice(0, 1)[0].map(formatColumnTitle);
+
+	// Strip away several unnessary data rows
 	data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
+	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.	
 	const formattedData = {};
 	let lastState;
 	for (let i = 0; i < data.length; i++) {
@@ -46,9 +49,11 @@ function script(data) {
 		}
 	}
 
+	// Further formatting
 	for (const stateString in formattedData) {
 		const state = formattedData[stateString];
-		if (!state.population) {
+
+		if (!state.population) { // Signifies that it's explanatory data that we don't want
 			delete formattedData[stateString];
 			continue;
 		}
