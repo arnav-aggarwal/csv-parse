@@ -8,17 +8,23 @@ let data = papa.parse(contents).data;
 data.splice(0, 3);
 data.splice(-12, 12);
 
-const columnTitles = data.splice(0, 1);
-data = data
-	.map(arr => {
-		// Remove legacy definition rape column, we will use new definition
-		arr.splice(5, 1);
+let columnTitles = data.splice(0, 1)[0];
 
-		// Change '\n' to '_'
-		arr = arr.map(str => str.replace(/\n/g, '_'));
-		return arr;
-	})
-	.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
+// Change '\n' to '_'
+columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d/g, ''));
+
+data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
+
+const formattedData = {};
+let lastState;
+for (let i = 0; i < data.length; i++) {
+	if (data[i][0]) {
+		lastState = data[i][0].replace(/\d/g, '');
+		formattedData[lastState] = [];
+	} else {
+		formattedData[lastState].push(data[i]);
+	}
+}
 
 console.log(columnTitles);
-fs.writeFileSync('./test.json', JSON.stringify(data, null, 2));
+fs.writeFileSync('./test.json', JSON.stringify(formattedData, null, 2));
