@@ -1,6 +1,10 @@
 const fs = require('fs');
 const papa = require('papaparse');
 
+function stringToNumber(numberString) {
+	return Number(numberString.replace(/,/g, ''));
+}
+
 const contents = fs.readFileSync('./state-crime-data/2013.csv', 'utf8');
 let data = papa.parse(contents).data;
 
@@ -24,15 +28,30 @@ for (let i = 0; i < data.length; i++) {
 	} else {
 		const stateData = formattedData[lastState];
 		for (let j = 0; j < columnTitles.length; j++) {
-			crimeType = columnTitles[j];
+			const crimeType = columnTitles[j];
+			const crimeData = stringToNumber(data[i][j]);
 			if (stateData[crimeType]) {
-				stateData[crimeType].perCapita = data[i][j];
+				stateData[crimeType].rate = crimeData;
+				stateData[crimeType].perCapita = crimeData / 100;
 			} else {
-				stateData[crimeType] = { total: data[i][j] };
+				stateData[crimeType] = { total: crimeData };
 			}
 		}
 	}
 }
 
-console.log(columnTitles);
+for (const stateString in formattedData) {
+	const state = formattedData[stateString];
+
+	state.Rape = state['Rape_(revised_definition)'];
+	delete state['Rape_(revised_definition)'];
+
+	delete state.State;
+	delete state.Area;
+	delete state[''];
+	delete state['Rape_(legacy_definition)'];
+
+	state.Population = state.Population.total;
+}
+
 fs.writeFileSync('./test.json', JSON.stringify(formattedData, null, 2));
