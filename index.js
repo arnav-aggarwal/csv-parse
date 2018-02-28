@@ -12,4 +12,7 @@ fileNames.forEach(fileName => {
 	const data = script(parsedContents);
 	const year = fileName.slice(0, 4);
 	fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(data, null, 2));
+
+	const csv = papa.unparse(data);
+	fs.writeFileSync(`./formatted-data/test-${year}.csv`, csv);
 });

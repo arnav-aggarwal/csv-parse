@@ -69,7 +69,7 @@ function script(data) {
 
 	const finalData = {};
 	
-	// Flatten all data for easier insertion into SQL tables
+	// Flatten all data
 	for (const stateString in formattedData) {
 		finalData[stateString] = {
 			population: formattedData[stateString].population,
@@ -87,7 +87,18 @@ function script(data) {
 		}
 	}
 
-	return finalData;
+	// Turn it into an array
+	const dataArray = Object.entries(finalData).map(([state, crimeData]) => {
+		const data = { state };
+		
+		for (const prop in crimeData) {
+			data[prop] = crimeData[prop];	
+		}
+		
+		return data;
+	});
+
+	return dataArray;
 }
 
 module.exports = script;
