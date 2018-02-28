@@ -26,13 +26,11 @@ for (let i = 0; i < data.length; i++) {
 		for (let j = 0; j < columnTitles.length; j++) {
 			crimeType = columnTitles[j];
 			if (stateData[crimeType]) {
-				stateData[crimeType].push(data[i][j]);
+				stateData[crimeType].perCapita = data[i][j];
 			} else {
-
-				stateData[crimeType] = [data[i][j]];
+				stateData[crimeType] = { total: data[i][j] };
 			}
 		}
-		// formattedData[lastState].push(data[i]);
 	}
 }
 
