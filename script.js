@@ -26,7 +26,7 @@ function script(data) {
 	// Strip away several unnessary data rows
 	data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
-	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.	
+	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
 	const formattedData = {};
 	let lastState;
 	for (let i = 0; i < data.length; i++) {
@@ -57,7 +57,7 @@ function script(data) {
 			delete formattedData[stateString];
 			continue;
 		}
-		
+
 		state.population = state.population.total;
 		state.forcible_rape = state['rape_(revised_definition)'];
 		delete state['rape_(revised_definition)'];
@@ -67,7 +67,27 @@ function script(data) {
 		delete state['rape_(legacy_definition)'];
 	}
 
-	return formattedData;
+	const finalData = {};
+	
+	// Flatten all data for easier insertion into SQL tables
+	for (const stateString in formattedData) {
+		finalData[stateString] = {
+			population: formattedData[stateString].population,
+		};
+		const state = formattedData[stateString];
+
+		for (const crimeType in state) {
+			if (crimeType === 'population') {
+				continue;
+			}
+
+			finalData[stateString][crimeType] = state[crimeType].total;
+			finalData[stateString][crimeType + '_rate'] = state[crimeType].rate;
+			finalData[stateString][crimeType + '_per_capita'] = state[crimeType].perCapita;
+		}
+	}
+
+	return finalData;
 }
 
 module.exports = script;
