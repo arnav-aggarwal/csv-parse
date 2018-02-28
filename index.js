@@ -14,7 +14,7 @@ data.splice(-12, 12);
 
 let columnTitles = data.splice(0, 1)[0];
 
-// Change '\n' to '_', numbers and '-' to empty string
+// Change '\n' and ' ' to '_', numbers and '-' to empty string
 columnTitles = columnTitles.map(str =>
 	str
 		.replace(/\n|\s/g, '_')
@@ -28,7 +28,7 @@ const formattedData = {};
 let lastState;
 for (let i = 0; i < data.length; i++) {
 	if (data[i][0]) {
-		lastState = data[i][0].replace(/\d/g, '');
+		lastState = data[i][0].replace(/\d|,/g, '');
 		lastState = lastState[0] + lastState.slice(1).toLowerCase();
 		formattedData[lastState] = {};
 	} else {
@@ -37,7 +37,7 @@ for (let i = 0; i < data.length; i++) {
 			const crimeType = columnTitles[j];
 			const crimeData = stringToNumber(data[i][j]);
 			if (stateData[crimeType]) {
-				stateData[crimeType].rate = crimeData;
+				stateData[crimeType].rate = Number(crimeData.toFixed());
 				stateData[crimeType].perCapita = Number((crimeData / 100).toFixed(2));
 			} else {
 				stateData[crimeType] = { total: crimeData };
