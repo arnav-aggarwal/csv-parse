@@ -16,5 +16,7 @@
     "url": "https://github.com/arnav-aggarwal/csv-parse/issues"
   },
   "homepage": "https://github.com/arnav-aggarwal/csv-parse#readme",
-  "dependencies": {}
+  "dependencies": {
+    "papaparse": "^4.3.7"
+  }
 }
