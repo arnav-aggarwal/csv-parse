@@ -15,7 +15,12 @@ data.splice(-12, 12);
 let columnTitles = data.splice(0, 1)[0];
 
 // Change '\n' to '_', numbers and '-' to empty string
-columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d|-/g, '').toLowerCase());
+columnTitles = columnTitles.map(str =>
+	str
+		.replace(/\n/g, '_')
+		.replace(/\d|-/g, '')
+		.toLowerCase()
+);
 
 data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
@@ -33,7 +38,7 @@ for (let i = 0; i < data.length; i++) {
 			const crimeData = stringToNumber(data[i][j]);
 			if (stateData[crimeType]) {
 				stateData[crimeType].rate = crimeData;
-				stateData[crimeType].perCapita = crimeData / 100;
+				stateData[crimeType].perCapita = Number((crimeData / 100).toFixed(2));
 			} else {
 				stateData[crimeType] = { total: crimeData };
 			}
@@ -44,15 +49,15 @@ for (let i = 0; i < data.length; i++) {
 for (const stateString in formattedData) {
 	const state = formattedData[stateString];
 
-	state.Rape = state['Rape_(revised_definition)'];
-	delete state['Rape_(revised_definition)'];
+	state.rape = state['rape_(revised_definition)'];
+	delete state['rape_(revised_definition)'];
 
-	delete state.State;
-	delete state.Area;
+	delete state.state;
+	delete state.area;
 	delete state[''];
-	delete state['Rape_(legacy_definition)'];
+	delete state['rape_(legacy_definition)'];
 
-	state.Population = state.population.total;
+	state.population = state.population.total;
 }
 
 fs.writeFileSync('./test.json', JSON.stringify(formattedData, null, 2));
