@@ -15,7 +15,7 @@ data.splice(-12, 12);
 let columnTitles = data.splice(0, 1)[0];
 
 // Change '\n' to '_', numbers and '-' to empty string
-columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d|-/g, ''));
+columnTitles = columnTitles.map(str => str.replace(/\n/g, '_').replace(/\d|-/g, '').toLowerCase());
 
 data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
 
@@ -24,6 +24,7 @@ let lastState;
 for (let i = 0; i < data.length; i++) {
 	if (data[i][0]) {
 		lastState = data[i][0].replace(/\d/g, '');
+		lastState = lastState[0] + lastState.slice(1).toLowerCase();
 		formattedData[lastState] = {};
 	} else {
 		const stateData = formattedData[lastState];
@@ -51,7 +52,7 @@ for (const stateString in formattedData) {
 	delete state[''];
 	delete state['Rape_(legacy_definition)'];
 
-	state.Population = state.Population.total;
+	state.Population = state.population.total;
 }
 
 fs.writeFileSync('./test.json', JSON.stringify(formattedData, null, 2));
