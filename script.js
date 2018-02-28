@@ -59,7 +59,7 @@ function script(data) {
 		}
 		
 		state.population = state.population.total;
-		state.rape = state['rape_(revised_definition)'];
+		state.forcible_rape = state['rape_(revised_definition)'];
 		delete state['rape_(revised_definition)'];
 		delete state.state;
 		delete state.area;
