@@ -20,9 +20,19 @@ let lastState;
 for (let i = 0; i < data.length; i++) {
 	if (data[i][0]) {
 		lastState = data[i][0].replace(/\d/g, '');
-		formattedData[lastState] = [];
+		formattedData[lastState] = {};
 	} else {
-		formattedData[lastState].push(data[i]);
+		const stateData = formattedData[lastState];
+		for (let j = 0; j < columnTitles.length; j++) {
+			crimeType = columnTitles[j];
+			if (stateData[crimeType]) {
+				stateData[crimeType].push(data[i][j]);
+			} else {
+
+				stateData[crimeType] = [data[i][j]];
+			}
+		}
+		// formattedData[lastState].push(data[i]);
 	}
 }
 
