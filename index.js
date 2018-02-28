@@ -17,7 +17,7 @@ let columnTitles = data.splice(0, 1)[0];
 // Change '\n' to '_', numbers and '-' to empty string
 columnTitles = columnTitles.map(str =>
 	str
-		.replace(/\n/g, '_')
+		.replace(/\n|\s/g, '_')
 		.replace(/\d|-/g, '')
 		.toLowerCase()
 );
@@ -49,13 +49,13 @@ for (let i = 0; i < data.length; i++) {
 for (const stateString in formattedData) {
 	const state = formattedData[stateString];
 
-	state.rape = state['rape_(revised_definition)'];
-	delete state['rape_(revised_definition)'];
-
 	delete state.state;
 	delete state.area;
 	delete state[''];
 	delete state['rape_(legacy_definition)'];
+
+	state.rape = state['rape_(revised_definition)'];
+	delete state['rape_(revised_definition)'];
 
 	state.population = state.population.total;
 }
