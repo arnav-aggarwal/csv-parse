@@ -9,10 +9,10 @@ fileNames.forEach(fileName => {
 	const fileContents = fs.readFileSync(filePath, 'utf8');
 	const parsedContents = papa.parse(fileContents).data;
 
-	const data = script(parsedContents);
+	const json = script(parsedContents);
 	const year = fileName.slice(0, 4);
-	fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(data, null, 2));
+	fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(json, null, 2));
 
-	const csv = papa.unparse(data);
+	const csv = papa.unparse(json);
 	fs.writeFileSync(`./formatted-data/test-${year}.csv`, csv);
 });
