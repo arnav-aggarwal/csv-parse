@@ -16,7 +16,7 @@ function formatColumnTitle(title) {
 	return title;
 }
 
-function script(data) {
+function script(data, year) {
 	// Remove unneeded title rows
 	data.splice(0, 3);
 
@@ -89,7 +89,7 @@ function script(data) {
 
 	// Turn it into an array
 	const dataArray = Object.entries(finalData).map(([state, crimeData]) => {
-		const data = { state };
+		const data = { state, year };
 		
 		for (const prop in crimeData) {
 			data[prop] = crimeData[prop];	
