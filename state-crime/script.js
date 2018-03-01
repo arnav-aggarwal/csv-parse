@@ -3,17 +3,13 @@ function stringToNumber(numberString) {
 }
 
 function formatColumnTitle(title) {
-	title = title
+	return title
 		.replace(/\n|\s/g, '_') // newlines and whitespace -> single underscore
 		.replace(/__/g, '_') // double underscores -> single underscore
 		.replace(/\d|-/g, '') // digits, dashes -> empty
-		.toLowerCase();
-
-	if (title[title.length - 1] === '_') {
-		return title.slice(0, -1); // take off trailing underscore
-	}
-
-	return title;
+		.replace(/_$/, '') // trailing underscore -> empty
+		.toLowerCase()
+		.trim();
 }
 
 function script(data, year) {
@@ -31,7 +27,7 @@ function script(data, year) {
 	let lastState;
 	for (let i = 0; i < data.length; i++) {
 		if (data[i][0]) {
-			lastState = data[i][0].replace(/\d|,/g, '');
+			lastState = data[i][0].replace(/\d|,/g, '').trim();
 			lastState = lastState[0] + lastState.slice(1).toLowerCase();
 			formattedData[lastState] = {};
 		} else {
@@ -49,7 +45,7 @@ function script(data, year) {
 		}
 	}
 
-	// Further formatting
+	// Further formatting, getting property names perfect, removing data
 	for (const stateString in formattedData) {
 		const state = formattedData[stateString];
 
@@ -68,7 +64,7 @@ function script(data, year) {
 	}
 
 	const finalData = {};
-	
+
 	// Flatten all data
 	for (const stateString in formattedData) {
 		finalData[stateString] = {
@@ -90,11 +86,11 @@ function script(data, year) {
 	// Turn it into an array
 	const dataArray = Object.entries(finalData).map(([state, crimeData]) => {
 		const data = { state, year };
-		
+
 		for (const prop in crimeData) {
-			data[prop] = crimeData[prop];	
+			data[prop] = crimeData[prop];
 		}
-		
+
 		return data;
 	});
 
