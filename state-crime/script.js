@@ -20,7 +20,7 @@ function script(data, year) {
 	const columnTitles = data.splice(0, 1)[0].map(formatColumnTitle);
 
 	// Strip away several unnessary data rows
-	data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
+	data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Total') || arr.includes('Rate per 100,000 inhabitants'));
 
 	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
 	const formattedData = {};

@@ -25,7 +25,7 @@ function script(data) {
 
 	data = data.map(arr => arr.slice(0, -4)).filter(arr => arr.includes('2016') || arr.includes('2017'));
 
-	// // This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
+	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
 	const formattedData = {};
 	let lastState, lastCity;
 	for (let i = 0; i < data.length; i++) {
@@ -72,8 +72,6 @@ function script(data) {
 			delete city.murder;
 		}
 	}
-
-	// return formattedData;
 
 	const dataArray = [];
 
