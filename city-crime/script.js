@@ -1,4 +1,8 @@
 function stringToNumber(numberString) {
+	if (typeof numberString !== 'string') {
+		return numberString;
+	}
+
 	return Number(numberString.replace(/,/g, ''));
 }
 
@@ -15,58 +19,61 @@ function formatColumnTitle(title) {
 function script(data, year) {
 	// Remove unneeded rows & blank columns
 	data.splice(0, 4);
-	data = data
-		.map(arr => arr.slice(0, -4))
-		.filter(arr => arr.includes('2016') || arr.includes('2017'));
 
 	// Format all column titles
 	const columnTitles = data.splice(0, 1)[0].map(formatColumnTitle);
-	return data;
 
-	// Strip away several unnessary data rows
-	// data = data.filter(arr => arr[0] || arr.includes('State Total') || arr.includes('Rate per 100,000 inhabitants'));
+	data = data.map(arr => arr.slice(0, -4)).filter(arr => arr.includes('2016') || arr.includes('2017'));
 
 	// // This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
-	// const formattedData = {};
-	// let lastState;
-	// for (let i = 0; i < data.length; i++) {
-	// 	if (data[i][0]) {
-	// 		lastState = data[i][0].replace(/\d|,/g, '').trim();
-	// 		lastState = lastState[0] + lastState.slice(1).toLowerCase();
-	// 		formattedData[lastState] = {};
-	// 	} else {
-	// 		const stateData = formattedData[lastState];
-	// 		for (let j = 0; j < columnTitles.length; j++) {
-	// 			const crimeType = columnTitles[j];
-	// 			const crimeData = stringToNumber(data[i][j]);
-	// 			if (stateData[crimeType]) {
-	// 				stateData[crimeType].rate = Number(crimeData.toFixed());
-	// 				stateData[crimeType].perCapita = Number((crimeData / 100).toFixed(2));
-	// 			} else {
-	// 				stateData[crimeType] = { total: crimeData };
-	// 			}
-	// 		}
-	// 	}
-	// }
+	const formattedData = {};
+	let lastState, lastCity;
+	for (let i = 0; i < data.length; i++) {
+		if (data[i][0]) {
+			lastState = data[i][0].replace(/\d|,/g, '').trim();
+			lastState = lastState[0] + lastState.slice(1).toLowerCase();
+			formattedData[lastState] = {};
+		}
 
-	// // Further formatting, getting property names perfect, removing data
-	// for (const stateString in formattedData) {
-	// 	const state = formattedData[stateString];
+		const thisState = formattedData[lastState];
 
-	// 	if (!state.population) {
-	// 		// Signifies that it's explanatory data that we don't want
-	// 		delete formattedData[stateString];
-	// 		continue;
-	// 	}
+		if (data[i][1]) {
+			lastCity = data[i][1].replace(/\d|,/g, '').trim();
+			lastCity = lastCity[0] + lastCity.slice(1).toLowerCase();
+			thisState[lastCity] = {};
+		}
 
-	// 	state.population = state.population.total;
-	// 	state.forcible_rape = state['rape_(revised_definition)'];
-	// 	delete state['rape_(revised_definition)'];
-	// 	delete state.state;
-	// 	delete state.area;
-	// 	delete state[''];
-	// 	delete state['rape_(legacy_definition)'];
-	// }
+		const thisCity = thisState[lastCity];
+
+		for (let j = 0; j < columnTitles.length; j++) {
+			const crimeType = columnTitles[j];
+			const crimeData = stringToNumber(data[i][j]);
+
+			if (crimeData) {
+				thisCity[crimeType] = crimeData;
+			}
+		}
+	}
+
+	// Further formatting, getting property names perfect, removing data
+	for (const stateString in formattedData) {
+		const state = formattedData[stateString];
+
+		for (const cityString in state) {
+			const city = state[cityString];
+
+			city.year = city[''];
+			delete city[''];
+
+			city.forcible_rape = city.rape;
+			delete city.rape;
+
+			city.murder_and_nonnegligent_manslaughter = city.murder;
+			delete city.murder;
+		}
+	}
+
+	return formattedData;
 
 	// const finalData = {};
 
