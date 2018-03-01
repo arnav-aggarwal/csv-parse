@@ -16,7 +16,7 @@ function formatColumnTitle(title) {
 		.trim();
 }
 
-function script(data, year) {
+function script(data) {
 	// Remove unneeded rows & blank columns
 	data.splice(0, 4);
 
@@ -93,11 +93,6 @@ function script(data, year) {
 				if (['year', 'population'].includes(item)) {
 					continue;
 				}
-
-				// if (city[item] === 0) {
-				// 	finalObj[item + '_per_capita'] = 0;
-				// 	continue;
-				// }
 
 				finalObj[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
 			}
