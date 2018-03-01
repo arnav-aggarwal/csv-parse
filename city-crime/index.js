@@ -13,6 +13,6 @@ fileNames.forEach(fileName => {
 	const json = script(parsedContents, year);
 	fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(json, null, 2));
 
-	// const csv = papa.unparse(json);
-	// fs.writeFileSync(`./formatted-data/test-${year}.csv`, csv);
+	const csv = papa.unparse(json);
+	fs.writeFileSync(`./formatted-data/test-${year}.csv`, csv);
 });

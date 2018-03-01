@@ -73,9 +73,35 @@ function script(data, year) {
 		}
 	}
 
-	return formattedData;
+	// return formattedData;
 
-	// const finalData = {};
+	const dataArray = [];
+
+	for (const stateString in formattedData) {
+		const state = formattedData[stateString];
+
+		for (const cityString in state) {
+			const city = state[cityString];
+			const finalObj = {
+				state: stateString,
+				city: cityString,
+			};
+
+			for (const item in city) {
+				finalObj[item] = city[item];
+
+				if (['year', 'population'].includes(item)) {
+					continue;
+				}
+
+				finalObj[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
+			}
+
+			dataArray.push(finalObj);
+		}
+	}
+
+	return dataArray;
 
 	// // Flatten all data
 	// for (const stateString in formattedData) {
