@@ -12,6 +12,26 @@ function formatColumnTitle(title) {
 		.trim();
 }
 
+function capitalizeFirstLetter(str) {
+	if (str.length === 0) {
+		return str;
+	}
+
+	return str[0].toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatState(state) {
+	state = state.replace(/\d|,/g, '').trim().toLowerCase();
+
+	const split = state.split(' ');
+	split[0] = capitalizeFirstLetter(split[0]);
+
+	const last = split.length - 1;
+	split[last] = capitalizeFirstLetter(split[last]);
+
+	return split.join(' ');
+}
+
 function script(data, year) {
 	// Remove unneeded title rows
 	data.splice(0, 3);
@@ -26,19 +46,18 @@ function script(data, year) {
 	const formattedData = {};
 	let lastState;
 	for (let i = 0; i < data.length; i++) {
-		if (data[i][0]) {
-			lastState = data[i][0].replace(/\d|,/g, '').trim();
-			lastState = lastState[0] + lastState.slice(1).toLowerCase();
+		if (data[i][0]) { // If the state name is present, insert it into the object. Do nothing else.
+			lastState = formatState(data[i][0]);
 			formattedData[lastState] = {};
-		} else {
+		} else { // If the state name is not present, the rest of the data is.
 			const stateData = formattedData[lastState];
 			for (let j = 0; j < columnTitles.length; j++) {
 				const crimeType = columnTitles[j];
 				const crimeData = stringToNumber(data[i][j]);
-				if (stateData[crimeType]) {
+				if (stateData[crimeType]) { // This data contains the rate value
 					stateData[crimeType].rate = Number(crimeData.toFixed());
 					stateData[crimeType].perCapita = Number((crimeData / 100).toFixed(2));
-				} else {
+				} else { // This row contains the total count
 					stateData[crimeType] = { total: crimeData };
 				}
 			}
@@ -49,7 +68,8 @@ function script(data, year) {
 	for (const stateString in formattedData) {
 		const state = formattedData[stateString];
 
-		if (!state.population) { // Signifies that it's explanatory data that we don't want
+		if (!state.population) {
+			// Signifies that it's explanatory data that we don't want
 			delete formattedData[stateString];
 			continue;
 		}
