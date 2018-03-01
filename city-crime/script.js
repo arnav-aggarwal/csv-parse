@@ -16,6 +16,31 @@ function formatColumnTitle(title) {
 		.trim();
 }
 
+function capitalizeFirstLetter(str) {
+	if (str.length === 0) {
+		return str;
+	}
+
+	return str[0].toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatCityState(state) {
+	state = state
+		.replace(/\d|,/g, '')
+		.trim()
+		.toLowerCase();
+
+	const split = state.split(' ').map(str => {
+		if (['the', 'of'].includes(str)) {
+			return str;
+		}
+
+		return capitalizeFirstLetter(str);
+	});
+
+	return split.join(' ');
+}
+
 function script(data) {
 	// Remove unneeded rows & blank columns
 	data.splice(0, 4);
@@ -30,16 +55,14 @@ function script(data) {
 	let lastState, lastCity;
 	for (let i = 0; i < data.length; i++) {
 		if (data[i][0]) {
-			lastState = data[i][0].replace(/\d|,/g, '').trim();
-			lastState = lastState[0] + lastState.slice(1).toLowerCase();
+			lastState = formatCityState(data[i][0]);
 			formattedData[lastState] = {};
 		}
 
 		const thisState = formattedData[lastState];
 
 		if (data[i][1]) {
-			lastCity = data[i][1].replace(/\d|,/g, '').trim();
-			lastCity = lastCity[0] + lastCity.slice(1).toLowerCase();
+			lastCity = formatCityState(data[i][1]);
 			thisState[lastCity] = {};
 		}
 

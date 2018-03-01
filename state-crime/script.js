@@ -20,14 +20,19 @@ function capitalizeFirstLetter(str) {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function formatState(state) {
-	state = state.replace(/\d|,/g, '').trim().toLowerCase();
+function formatCityState(state) {
+	state = state
+		.replace(/\d|,/g, '')
+		.trim()
+		.toLowerCase();
 
-	const split = state.split(' ');
-	split[0] = capitalizeFirstLetter(split[0]);
+	const split = state.split(' ').map(str => {
+		if (['the', 'of'].includes(str)) {
+			return str;
+		}
 
-	const last = split.length - 1;
-	split[last] = capitalizeFirstLetter(split[last]);
+		return capitalizeFirstLetter(str);
+	});
 
 	return split.join(' ');
 }
@@ -47,7 +52,7 @@ function script(data, year) {
 	let lastState;
 	for (let i = 0; i < data.length; i++) {
 		if (data[i][0]) { // If the state name is present, insert it into the object. Do nothing else.
-			lastState = formatState(data[i][0]);
+			lastState = formatCityState(data[i][0]);
 			formattedData[lastState] = {};
 		} else { // If the state name is not present, the rest of the data is.
 			const stateData = formattedData[lastState];
@@ -68,8 +73,7 @@ function script(data, year) {
 	for (const stateString in formattedData) {
 		const state = formattedData[stateString];
 
-		if (!state.population) {
-			// Signifies that it's explanatory data that we don't want
+		if (!state.population) { // Signifies that it's explanatory data that we don't want
 			delete formattedData[stateString];
 			continue;
 		}
