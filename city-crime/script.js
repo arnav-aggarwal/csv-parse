@@ -65,10 +65,10 @@ function script(data, year) {
 			city.year = city[''];
 			delete city[''];
 
-			city.forcible_rape = city.rape;
+			city.forcible_rape = city.rape || 0;
 			delete city.rape;
 
-			city.murder_and_nonnegligent_manslaughter = city.murder;
+			city.murder_and_nonnegligent_manslaughter = city.murder || 0;
 			delete city.murder;
 		}
 	}
@@ -94,6 +94,11 @@ function script(data, year) {
 					continue;
 				}
 
+				// if (city[item] === 0) {
+				// 	finalObj[item + '_per_capita'] = 0;
+				// 	continue;
+				// }
+
 				finalObj[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
 			}
 
@@ -102,37 +107,6 @@ function script(data, year) {
 	}
 
 	return dataArray;
-
-	// // Flatten all data
-	// for (const stateString in formattedData) {
-	// 	finalData[stateString] = {
-	// 		population: formattedData[stateString].population,
-	// 	};
-	// 	const state = formattedData[stateString];
-
-	// 	for (const crimeType in state) {
-	// 		if (crimeType === 'population') {
-	// 			continue;
-	// 		}
-
-	// 		finalData[stateString][crimeType] = state[crimeType].total;
-	// 		finalData[stateString][crimeType + '_rate'] = state[crimeType].rate;
-	// 		finalData[stateString][crimeType + '_per_capita'] = state[crimeType].perCapita;
-	// 	}
-	// }
-
-	// // Turn it into an array
-	// const dataArray = Object.entries(finalData).map(([state, crimeData]) => {
-	// 	const data = { state, year };
-
-	// 	for (const prop in crimeData) {
-	// 		data[prop] = crimeData[prop];
-	// 	}
-
-	// 	return data;
-	// });
-
-	// return dataArray;
 }
 
 module.exports = script;
