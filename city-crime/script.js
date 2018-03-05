@@ -24,13 +24,20 @@ function capitalizeFirstLetter(str) {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function formatCityState(state) {
-	state = state
+function formatState(state) {
+	return state
+		.replace(/\d|,/g, '')
+		.trim()
+		.toUpperCase();
+}
+
+function formatCity(city) {
+	city = city
 		.replace(/\d|,/g, '')
 		.trim()
 		.toLowerCase();
 
-	const split = state.split(' ').map(str => {
+	const split = city.split(' ').map(str => {
 		if (['the', 'of'].includes(str)) {
 			return str;
 		}
@@ -41,88 +48,71 @@ function formatCityState(state) {
 	return split.join(' ');
 }
 
-function script(data) {
+function script(data, year) {
 	// Remove unneeded rows & blank columns
-	data.splice(0, 4);
+	data.splice(0, 3);
 
 	// Format all column titles
-	const columnTitles = data.splice(0, 1)[0].map(formatColumnTitle);
+	const columnTitles = data
+		.splice(0, 1)[0]
+		.map(formatColumnTitle)
+		.filter(Boolean);
 
-	data = data.map(arr => arr.slice(0, -4)).filter(arr => arr.includes('2016') || arr.includes('2017'));
+	data = data.filter(arr => arr.filter(Boolean).length > 10);
 
 	// This is a mess, but no good way to clean it up. Transforms data into a much more managable format.
-	const formattedData = {};
-	let lastState, lastCity;
+	const formattedData = [];
+	let lastState;
 	for (let i = 0; i < data.length; i++) {
 		if (data[i][0]) {
-			lastState = formatCityState(data[i][0]);
-			formattedData[lastState] = {};
+			lastState = formatState(data[i][0]);
 		}
 
-		const thisState = formattedData[lastState];
+		const cityString = formatCity(data[i][1]);
+		const thisCity = {
+			state: lastState,
+			city: cityString,
+		};
 
-		if (data[i][1]) {
-			lastCity = formatCityState(data[i][1]);
-			thisState[lastCity] = {};
-		}
+		formattedData.push(thisCity);
 
-		const thisCity = thisState[lastCity];
+		for (let j = 2; j < columnTitles.length; j++) {
+			const dataString = data[i][j];
+			if (!dataString) {
+				continue;
+			}
 
-		for (let j = 0; j < columnTitles.length; j++) {
 			const crimeType = columnTitles[j];
-			const crimeData = stringToNumber(data[i][j]);
-
-			if (crimeData) {
-				thisCity[crimeType] = crimeData;
-			}
+			const crimeData = stringToNumber(dataString);
+			thisCity[crimeType] = crimeData;
 		}
 	}
 
-	// Further formatting, getting property names perfect, removing data
-	for (const stateString in formattedData) {
-		const state = formattedData[stateString];
+	// Further formatting, getting property names perfect
+	formattedData.forEach(city => {
+		city.year = year;
+		city.state_original = city.state;
+		city.city_original = city.city;
 
-		for (const cityString in state) {
-			const city = state[cityString];
+		city.forcible_rape = city['rape_(revised_definition)'];
+		delete city['rape_(revised_definition)'];
 
-			city.year = city[''];
-			delete city[''];
+		city.violent_crimes = city.violent_crime;
+		delete city.violent_crime;
 
-			city.forcible_rape = city.rape || 0;
-			delete city.rape;
+		city.property_crimes = city.property_crime;
+		delete city.property_crime;
 
-			city.murder_and_nonnegligent_manslaughter = city.murder || 0;
-			delete city.murder;
-		}
-	}
-
-	const dataArray = [];
-
-	for (const stateString in formattedData) {
-		const state = formattedData[stateString];
-
-		for (const cityString in state) {
-			const city = state[cityString];
-			const finalObj = {
-				state: stateString,
-				city: cityString,
-			};
-
-			for (const item in city) {
-				finalObj[item] = city[item];
-
-				if (['year', 'population'].includes(item)) {
-					continue;
-				}
-
-				finalObj[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
+		for (const item in city) {
+			if (['year', 'population', 'state', 'city', 'state_original', 'city_original'].includes(item)) {
+				continue;
 			}
 
-			dataArray.push(finalObj);
+			city[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
 		}
-	}
+	});
 
-	return dataArray;
+	return formattedData;
 }
 
 module.exports = script;
