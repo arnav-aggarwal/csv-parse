@@ -108,7 +108,7 @@ function script(data, year) {
 				continue;
 			}
 
-			city[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
+			city[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(2));
 		}
 	});
 
