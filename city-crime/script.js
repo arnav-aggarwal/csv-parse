@@ -86,6 +86,10 @@ function script(data, year) {
 			const crimeData = stringToNumber(dataString);
 			thisCity[crimeType] = crimeData;
 		}
+
+		if (thisCity.arson === undefined) {
+			thisCity.arson = null;
+		}
 	}
 
 	// Further formatting, getting property names perfect
@@ -109,6 +113,10 @@ function script(data, year) {
 			}
 
 			city[item + '_per_capita'] = Number((city[item] / city.population * 1000).toFixed(4));
+		}
+
+		if (city.arson === null) {
+			city.arson_per_capita = null;
 		}
 	});
 
