@@ -25,6 +25,26 @@ function formatState(state) {
 		.toUpperCase();
 }
 
+function addProps(obj, property, value, population) {
+	value = stringToNumber(value);
+	population = stringToNumber(population);
+
+	if(typeof value !== 'number') {
+		obj[property] = null;
+		obj[property + '_per_capita'] = null;
+		return;
+	}
+
+	obj[property] = value;
+
+	if(typeof population !== 'number' || population === 0) {
+		obj[property + '_per_capita'] = null;
+		return;
+	}
+
+	obj[property + '_per_capita'] = Number((1000 * value / population).toFixed(2));
+}
+
 function script(data, year) {
 	// Get rid of column titles
 	data.shift();
@@ -82,108 +102,45 @@ function script(data, year) {
 
 			obj.state = state;
 			obj.state_original = originalState;
-
 			obj.under_18 = 1;
 
-			obj.total_arrests = stringToNumber(total);
-			obj.total_arrests_per_capita = null;
-
-			obj.violent_crimes = stringToNumber(violent);
-			obj.violent_crimes_per_capita = null;
-
-			obj.property_crimes = stringToNumber(property);
-			obj.property_crimes_per_capita = null;
-
-			obj.murder_and_nonnegligent_manslaughter = stringToNumber(murder);
-			obj.murder_and_nonnegligent_manslaughter_per_capita = null;
-
-			obj.forcible_rape = stringToNumber(rape);
-			obj.forcible_rape_per_capita = null;
-
-			obj.robbery = stringToNumber(robbery);
-			obj.robbery_per_capita = null;
-
-			obj.aggravated_assault = stringToNumber(agg);
-			obj.aggravated_assault_per_capita = null;
-
-			obj.burglary = stringToNumber(burglary);
-			obj.burglary_per_capita = null;
-
-			obj.larceny_theft = stringToNumber(larceny);
-			obj.larceny_theft_per_capita = null;
-
-			obj.motor_vehicle_theft = stringToNumber(motor);
-			obj.motor_vehicle_theft_per_capita = null;
-
-			obj.arson = stringToNumber(arson);
-			obj.arson_per_capita = null;
-
-			obj.other_assaults = stringToNumber(otherAssaults);
-			obj.other_assaults_per_capita = null;
-
-			obj.forgery_and_counterfeiting = stringToNumber(forgery);
-			obj.forgery_and_counterfeiting_per_capita = null;
-
-			obj.fraud = stringToNumber(fraud);
-			obj.fraud_per_capita = null;
-
-			obj.embezzlement = stringToNumber(embezzlement);
-			obj.embezzlement_per_capita = null;
-
-			obj.stolen_property = stringToNumber(stolenProperty);
-			obj.stolen_property_per_capita = null;
-
-			obj.vandalism = stringToNumber(vandalism);
-			obj.vandalism_per_capita = null;
-
-			obj.weapons_posession = stringToNumber(weapons);
-			obj.weapons_posession_per_capita = null;
-
-			obj.prostitution = stringToNumber(prostitution);
-			obj.prostitution_per_capita = null;
-
-			obj.sex_offenses = stringToNumber(sex);
-			obj.sex_offenses_per_capita = null;
-
-			obj.drug_abuse_violations = stringToNumber(drug);
-			obj.drug_abuse_violations_per_capita = null;
-
-			obj.gambling = stringToNumber(gambling);
-			obj.gambling_per_capita = null;
-
-			obj.offenses_agains_family_and_children = stringToNumber(family);
-			obj.offenses_agains_family_and_children_per_capita = null;
-
-			obj.dui = stringToNumber(dui);
-			obj.dui_per_capita = null;
-
-			obj.liquor_laws = stringToNumber(liquor);
-			obj.liquor_laws_per_capita = null;
-
-			obj.drunkenness = stringToNumber(drunkenness);
-			obj.drunkenness_per_capita = null;
-
-			obj.disorderly_conduct = stringToNumber(disorderly);
-			obj.disorderly_conduct_per_capita = null;
-
-			obj.vagrancy = stringToNumber(vagrancy);
-			obj.vagrancy_per_capita = null;
-
-			obj.all_others = stringToNumber(other);
-			obj.all_others_per_capita = null;
-
-			obj.suspicion = stringToNumber(suspicion);
-			obj.suspicion_per_capita = null;
-
-			obj.curfew_and_loitering = stringToNumber(curfew);
-			obj.curfew_and_loitering_per_capita = null;
-
-			obj.runaways = null;
-			obj.runaways_per_capita = null;
+			addProps(obj, 'total_arrests', total);
+			addProps(obj, 'violent_crimes', violent);
+			addProps(obj, 'property_crimes', property);
+			addProps(obj, 'murder_and_nonnegligent_manslaughter', murder);
+			addProps(obj, 'forcible_rape', rape);
+			addProps(obj, 'robbery', robbery);
+			addProps(obj, 'aggravated_assault', agg);
+			addProps(obj, 'burglary', burglary);
+			addProps(obj, 'larceny_theft', larceny);
+			addProps(obj, 'motor_vehicle_theft', motor);
+			addProps(obj, 'arson', arson);
+			addProps(obj, 'other_assaults', otherAssaults);
+			addProps(obj, 'forgery_and_counterfeiting', forgery);
+			addProps(obj, 'fraud', fraud);
+			addProps(obj, 'embezzlement', embezzlement);
+			addProps(obj, 'stolen_property', stolenProperty);
+			addProps(obj, 'embezzlement', embezzlement);
+			addProps(obj, 'stolen_property', stolenProperty);
+			addProps(obj, 'vandalism', vandalism);
+			addProps(obj, 'weapons_posession', weapons);
+			addProps(obj, 'prostitution', prostitution);
+			addProps(obj, 'sex_offenses', sex);
+			addProps(obj, 'drug_abuse_violations', drug);
+			addProps(obj, 'gambling', gambling);
+			addProps(obj, 'offenses_agains_family_and_children', family);
+			addProps(obj, 'dui', dui);
+			addProps(obj, 'liquor_laws', liquor);
+			addProps(obj, 'drunkenness', drunkenness);
+			addProps(obj, 'disorderly_conduct', disorderly);
+			addProps(obj, 'vagrancy', vagrancy);
+			addProps(obj, 'all_others', other);
+			addProps(obj, 'suspicion', suspicion);
+			addProps(obj, 'curfew_and_loitering', curfew);
+			addProps(obj, 'runaways');
 
 			obj.estimated_population = stringToNumber(population);
 			obj.number_of_agencies = stringToNumber(agencies);
-
 			obj.year = stringToNumber(year);
 		}
 
@@ -233,105 +190,41 @@ function script(data, year) {
 
 			obj.under_18 = 0;
 
-			obj.total_arrests = stringToNumber(total);
-			obj.total_arrests_per_capita = perCapita(total, population);
-
-			obj.violent_crimes = stringToNumber(violent);
-			obj.violent_crimes_per_capita = perCapita(violent, population);
-
-			obj.property_crimes = stringToNumber(property);
-			obj.property_crimes_per_capita = perCapita(property, population);
-
-			obj.murder_and_nonnegligent_manslaughter = stringToNumber(murder);
-			obj.murder_and_nonnegligent_manslaughter_per_capita = perCapita(murder, population);
-
-			obj.forcible_rape = stringToNumber(rape);
-			obj.forcible_rape_per_capita = perCapita(rape, population);
-
-			obj.robbery = stringToNumber(robbery);
-			obj.robbery_per_capita = perCapita(robbery, population);
-
-			obj.aggravated_assault = stringToNumber(agg);
-			obj.aggravated_assault_per_capita = perCapita(agg, population);
-
-			obj.burglary = stringToNumber(burglary);
-			obj.burglary_per_capita = perCapita(burglary, population);
-
-			obj.larceny_theft = stringToNumber(larceny);
-			obj.larceny_theft_per_capita = perCapita(larceny, population);
-
-			obj.motor_vehicle_theft = stringToNumber(motor);
-			obj.motor_vehicle_theft_per_capita = perCapita(motor, population);
-
-			obj.arson = stringToNumber(arson);
-			obj.arson_per_capita = perCapita(arson, population);
-
-			obj.other_assaults = stringToNumber(otherAssaults);
-			obj.other_assaults_per_capita = perCapita(otherAssaults, population);
-
-			obj.forgery_and_counterfeiting = stringToNumber(forgery);
-			obj.forgery_and_counterfeiting_per_capita = perCapita(forgery, population);
-
-			obj.fraud = stringToNumber(fraud);
-			obj.fraud_per_capita = perCapita(fraud, population);
-
-			obj.embezzlement = stringToNumber(embezzlement);
-			obj.embezzlement_per_capita = perCapita(embezzlement, population);
-
-			obj.stolen_property = stringToNumber(stolenProperty);
-			obj.stolen_property_per_capita = perCapita(stolenProperty, population);
-
-			obj.vandalism = stringToNumber(vandalism);
-			obj.vandalism_per_capita = perCapita(vandalism, population);
-
-			obj.weapons_posession = stringToNumber(weapons);
-			obj.weapons_posession_per_capita = perCapita(weapons, population);
-
-			obj.prostitution = stringToNumber(prostitution);
-			obj.prostitution_per_capita = perCapita(prostitution, population);
-
-			obj.sex_offenses = stringToNumber(sex);
-			obj.sex_offenses_per_capita = perCapita(sex, population);
-
-			obj.drug_abuse_violations = stringToNumber(drug);
-			obj.drug_abuse_violations_per_capita = perCapita(drug, population);
-
-			obj.gambling = stringToNumber(gambling);
-			obj.gambling_per_capita = perCapita(gambling, population);
-
-			obj.offenses_agains_family_and_children = stringToNumber(family);
-			obj.offenses_agains_family_and_children_per_capita = perCapita(family, population);
-
-			obj.dui = stringToNumber(dui);
-			obj.dui_per_capita = perCapita(dui, population);
-
-			obj.liquor_laws = stringToNumber(liquor);
-			obj.liquor_laws_per_capita = perCapita(liquor, population);
-
-			obj.drunkenness = stringToNumber(drunkenness);
-			obj.drunkenness_per_capita = perCapita(drunkenness, population);
-
-			obj.disorderly_conduct = stringToNumber(disorderly);
-			obj.disorderly_conduct_per_capita = perCapita(disorderly, population);
-
-			obj.vagrancy = stringToNumber(vagrancy);
-			obj.vagrancy_per_capita = perCapita(vagrancy, population);
-
-			obj.all_others = stringToNumber(other);
-			obj.all_others_per_capita = perCapita(other, population);
-
-			obj.suspicion = stringToNumber(suspicion);
-			obj.suspicion_per_capita = perCapita(suspicion, population);
-
-			obj.curfew_and_loitering = stringToNumber(curfew);
-			obj.curfew_and_loitering_per_capita = perCapita(curfew, population);
-
-			obj.runaways = null;
-			obj.runaways_per_capita = null;
+			addProps(obj, 'total_arrests', total, population);
+			addProps(obj, 'violent_crimes', violent, population);
+			addProps(obj, 'property_crimes', property, population);
+			addProps(obj, 'murder_and_nonnegligent_manslaughter', murder, population);
+			addProps(obj, 'forcible_rape', rape, population);
+			addProps(obj, 'robbery', robbery, population);
+			addProps(obj, 'aggravated_assault', agg, population);
+			addProps(obj, 'burglary', burglary, population);
+			addProps(obj, 'larceny_theft', larceny, population);
+			addProps(obj, 'motor_vehicle_theft', motor, population);
+			addProps(obj, 'arson', arson, population);
+			addProps(obj, 'other_assaults', otherAssaults, population);
+			addProps(obj, 'forgery_and_counterfeiting', forgery, population);
+			addProps(obj, 'fraud', fraud, population);
+			addProps(obj, 'embezzlement', embezzlement, population);
+			addProps(obj, 'stolen_property', stolenProperty, population);
+			addProps(obj, 'vandalism', vandalism, population);
+			addProps(obj, 'weapons_posession', weapons, population);
+			addProps(obj, 'prostitution', prostitution, population);
+			addProps(obj, 'sex_offenses', sex, population);
+			addProps(obj, 'drug_abuse_violations', drug, population);
+			addProps(obj, 'gambling', gambling, population);
+			addProps(obj, 'offenses_agains_family_and_children', family, population);
+			addProps(obj, 'dui', dui, population);
+			addProps(obj, 'liquor_laws', liquor, population);
+			addProps(obj, 'drunkenness', drunkenness, population);
+			addProps(obj, 'disorderly_conduct', disorderly, population);
+			addProps(obj, 'vagrancy', vagrancy, population);
+			addProps(obj, 'all_others', other, population);
+			addProps(obj, 'suspicion', suspicion, population);
+			addProps(obj, 'curfew_and_loitering', curfew, population);
+			addProps(obj, 'runaways');
 
 			obj.estimated_population = stringToNumber(population);
 			obj.number_of_agencies = stringToNumber(agencies);
-
 			obj.year = year;
 		}
 	}
