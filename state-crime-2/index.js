@@ -5,9 +5,6 @@ const script = require('./script');
 const dataFolderPath = './data/';
 const fileNames = fs.readdirSync(dataFolderPath).filter(name => name.includes('.csv'));
 const originalData = fileNames.shift();
-fileNames.pop();
-fileNames.pop();
-fileNames.pop();
 
 const data = [];
 fileNames.forEach(fileName => {
@@ -24,5 +21,5 @@ fileNames.forEach(fileName => {
 	fs.writeFileSync(`./formatted-data/test-city-${year}.csv`, csv);
 });
 
-// const finalCsv = papa.unparse(data);
-// fs.writeFileSync(`./formatted-data/test-city-2013-2016.csv`, finalCsv);
+const finalCsv = papa.unparse(data);
+fs.writeFileSync(`./formatted-data/test-city-2013-2016.csv`, finalCsv);

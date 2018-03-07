@@ -73,7 +73,7 @@ function script(data, year) {
 				other,
 				suspicion,
 				curfew,
-				__,
+				agencies,
 				pop
 			] = data[i];
 			originalState = stateStr;
@@ -99,6 +99,12 @@ function script(data, year) {
 
 			obj.forcible_rape = rape;
 			obj.forcible_rape_per_capita = null;
+
+			obj.robbery = robbery;
+			obj.robbery_per_capita = null;
+
+			obj.aggravated_assault = agg;
+			obj.aggravated_assault_per_capita = perCapita(agg, population);
 
 			obj.burglary = burglary;
 			obj.burglary_per_capita = null;
@@ -151,6 +157,12 @@ function script(data, year) {
 			obj.dui = dui;
 			obj.dui_per_capita = null;
 
+			obj.liquor_laws = liquor;
+			obj.liquor_laws_per_capita = null;
+
+			obj.drunkenness = drunkenness;
+			obj.drunkenness_per_capita = null;
+
 			obj.disorderly_conduct = disorderly;
 			obj.disorderly_conduct_per_capita = null;
 
@@ -170,6 +182,7 @@ function script(data, year) {
 			obj.runaways_per_capita = null;
 
 			obj.estimated_population = population;
+			obj.number_of_agencies = agencies;
 
 			obj.year = year;
 		}
@@ -212,6 +225,7 @@ function script(data, year) {
 				other,
 				suspicion,
 				curfew,
+				agencies,
 			] = data[i + 1];
 
 			obj.state = state;
@@ -233,6 +247,12 @@ function script(data, year) {
 
 			obj.forcible_rape = rape;
 			obj.forcible_rape_per_capita = perCapita(rape, population);
+
+			obj.robbery = robbery;
+			obj.robbery_per_capita = perCapita(robbery, population);
+
+			obj.aggravated_assault = agg;
+			obj.aggravated_assault_per_capita = perCapita(agg, population);
 
 			obj.burglary = burglary;
 			obj.burglary_per_capita = perCapita(burglary, population);
@@ -285,6 +305,12 @@ function script(data, year) {
 			obj.dui = dui;
 			obj.dui_per_capita = perCapita(dui, population);
 
+			obj.liquor_laws = liquor;
+			obj.liquor_laws_per_capita = perCapita(liquor, population);
+
+			obj.drunkenness = drunkenness;
+			obj.drunkenness_per_capita = perCapita(drunkenness, population);
+
 			obj.disorderly_conduct = disorderly;
 			obj.disorderly_conduct_per_capita = perCapita(disorderly, population);
 
@@ -304,6 +330,7 @@ function script(data, year) {
 			obj.runaways_per_capita = null;
 
 			obj.estimated_population = population;
+			obj.number_of_agencies = agencies;
 
 			obj.year = year;
 		}
