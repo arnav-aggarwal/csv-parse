@@ -17,11 +17,11 @@ fileNames.forEach(fileName => {
 	const year = fileName.slice(0, 4);
 
 	const json = script(parsedContents, year);
-	// data.push(...json);
-	// fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(json, null, 2));
+	data.push(...json);
+	fs.writeFileSync(`./formatted-data/test-${year}.json`, JSON.stringify(json, null, 2));
 
-	// const csv = papa.unparse(json);
-	// fs.writeFileSync(`./formatted-data/test-city-${year}.csv`, csv);
+	const csv = papa.unparse(json);
+	fs.writeFileSync(`./formatted-data/test-city-${year}.csv`, csv);
 });
 
 // const finalCsv = papa.unparse(data);
