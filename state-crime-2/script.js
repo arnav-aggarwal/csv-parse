@@ -10,6 +10,7 @@ function formatColumnTitle(title) {
 	return title
 		.replace(/\n|\s/g, '_') // newlines and whitespace -> single underscore
 		.replace(/__/g, '_') // double underscores -> single underscore
+		.replace(/__/g, '_') // double underscores -> single underscore
 		.replace(/\d|-/g, '') // digits, dashes -> empty
 		.replace(/_$/, '') // trailing underscore -> empty
 		.toLowerCase()
