@@ -101,7 +101,7 @@ function script(data, year) {
 			population = pop;
 
 			obj.state = state;
-			obj.state_original = originalState;
+			obj.state_original = state;
 			obj.under_18 = 1;
 
 			addProps(obj, 'total_arrests', total);
@@ -186,7 +186,7 @@ function script(data, year) {
 			] = data[i + 1];
 
 			obj.state = state;
-			obj.state_original = originalState;
+			obj.state_original = state;
 
 			obj.under_18 = 0;
 
