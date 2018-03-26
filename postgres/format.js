@@ -11,13 +11,17 @@ function script(data) {
 
 		columnTitles.forEach((col, index) => {
 			obj[col] = row[index];
+
+			if (obj[col] === 'NaN') {
+				obj[col] = null;
+			}
 		});
 
 		delete obj.state_original;
 		delete obj.city_original;
 		delete obj.id;
 
-		if (obj.state === undefined) {
+		if (!obj.state) {
 			return;
 		}
 
