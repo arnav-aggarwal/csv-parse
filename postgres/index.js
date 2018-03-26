@@ -7,7 +7,7 @@ function backfillLocation(data) {
 		const currentItem = data[i];
 		const { county, county_source, state_fips, county_fips, lat, lng, zips } = currentItem;
 		const props = [county, county_source, state_fips, county_fips, lat, lng, zips];
-		const missingData = props.all(x => x === undefined);
+		const missingData = props.every(x => x === undefined);
 
 		if (!missingData) {
 			continue;
